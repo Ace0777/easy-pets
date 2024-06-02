@@ -1,4 +1,4 @@
-package br.com.vianna.edu.EasyPets.Model;
+package br.com.vianna.edu.EasyPets.Model.user;
 
 public enum EtipoUser {
     ADMINISTRADOR,

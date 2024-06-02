@@ -1,4 +1,4 @@
-package br.com.vianna.edu.EasyPets.Model;
+package br.com.vianna.edu.EasyPets.Model.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
