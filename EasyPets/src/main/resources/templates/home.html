@@ -169,6 +169,16 @@
             item.classList.toggle('active');
         });
     });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const cadastrarItem = Array.from(document.querySelectorAll(".submenu-item")).find(item => item.textContent.trim() === "Cadastrar");
+
+        if (cadastrarItem) {
+            cadastrarItem.addEventListener("click", function() {
+                window.location.href = "http://localhost:8080/cadastroAnimal";
+            });
+        }
+    });
 </script>
 </body>
 </html>

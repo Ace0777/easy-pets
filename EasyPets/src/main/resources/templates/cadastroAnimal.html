@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Animal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.16.13/antd.min.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .form-select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .form-submit {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .form-submit:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h2>Cadastro de Animal</h2>
+    <form th:action="@{/animal/cadastrar}" method="post" th:object="${animal}">
+        <div class="form-group">
+            <label for="nome" class="form-label">Nome:</label>
+            <input type="text" id="nome" name="nome" class="form-control" th:field="*{nome}" required>
+        </div>
+        <div class="form-group">
+            <label for="peso" class="form-label">Peso:</label>
+            <input type="text" id="peso" name="peso" class="form-control" th:field="*{peso}">
+        </div>
+        <div class="form-group">
+            <label for="dataNascimento" class="form-label">Data de Nascimento:</label>
+            <input type="date" id="dataNascimento" name="dataNascimento" class="form-control" th:field="*{dataNascimento}" required>
+        </div>
+        <div class="form-group">
+            <label for="sexo" class="form-label">Sexo:</label>
+            <select id="sexo" name="sexo" class="form-select" th:field="*{sexo}" required>
+                <option value="MACHO">Macho</option>
+                <option value="FEMEA">Femea</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="tipoAnimal" class="form-label">Tipo de Animal:</label>
+            <select id="tipoAnimal" name="tipoAnimal" class="form-select" th:field="*{tipoAnimal}" required>
+                <option value="MAMIFERO">Mamífero</option>
+                <option value="AVE">Ave</option>
+                <option value="REPTIL">Réptil</option>
+                <option value="ANFIBIO">Anfíbio</option>
+                <option value="PEIXE">Peixe</option>
+                <option value="INVERTEBRADO">Invertebrado</option>
+            </select>
+        </div>
+        <button type="submit" class="form-submit">Cadastrar</button>
+    </form>
+</div>
+</body>
+</html>
+

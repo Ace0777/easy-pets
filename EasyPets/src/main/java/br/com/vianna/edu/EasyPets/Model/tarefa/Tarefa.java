@@ -19,8 +19,12 @@ public class Tarefa {
 
     private String descricao;
 
+    @ManyToOne
+    @JoinColumn(name = "animal_id")
     private Animal animal;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User cuidador;
 
     private LocalDate dataRealizacaoTarefa;
