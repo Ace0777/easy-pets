@@ -1,14 +1,13 @@
 package br.com.vianna.edu.EasyPets.Controller;
 
-
 import br.com.vianna.edu.EasyPets.Model.animal.Animal;
 import br.com.vianna.edu.EasyPets.Model.animal.AnimalRepository;
-import br.com.vianna.edu.EasyPets.Model.animal.EtipoAnimal;
-import br.com.vianna.edu.EasyPets.Model.animal.EtipoSexo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/")
@@ -29,5 +28,10 @@ public class AnimalController {
         return "redirect:/home";
     }
 
-
+    @GetMapping("/listaAnimais")
+    public String listarAnimais(Model model) {
+        List<Animal> animais = repository.findAll();
+        model.addAttribute("animais", animais);
+        return "listaAnimais";
+    }
 }

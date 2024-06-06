@@ -171,13 +171,19 @@
     });
 
     document.addEventListener("DOMContentLoaded", function() {
-        const cadastrarItem = Array.from(document.querySelectorAll(".submenu-item")).find(item => item.textContent.trim() === "Cadastrar");
+        const redirectMapping = {
+            "Cadastrar": "http://localhost:8080/cadastroAnimal",
+            "Dados": "http://localhost:8080/listaAnimais",
+        };
 
-        if (cadastrarItem) {
-            cadastrarItem.addEventListener("click", function() {
-                window.location.href = "http://localhost:8080/cadastroAnimal";
-            });
-        }
+        document.querySelectorAll(".submenu-item").forEach(item => {
+            const trimmedText = item.textContent.trim();
+            if (redirectMapping[trimmedText]) {
+                item.addEventListener("click", function() {
+                    window.location.href = redirectMapping[trimmedText];
+                });
+            }
+        });
     });
 </script>
 </body>
