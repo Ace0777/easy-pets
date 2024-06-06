@@ -118,6 +118,12 @@
             </svg>
             Usuário
         </li>
+        <ul class="submenu">
+            <li class="submenu-item">Dados</li>
+            <li class="submenu-item">Alterar dados</li>
+            <li class="submenu-item">Cadastrar</li>
+            <li class="submenu-item">Consultar Cuidados</li>
+        </ul>
         <li class="menu-item">
             <svg class="anticon" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M6 2a1 1 0 0 0 0 2h1v12H6a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-1V4h1a1 1 0 1 0 0-2H6z"/>
@@ -174,13 +180,26 @@
         const redirectMapping = {
             "Cadastrar": "http://localhost:8080/cadastroAnimal",
             "Dados": "http://localhost:8080/listaAnimais",
+            "Alterar dados": "http://localhost:8080/alterarAnimal",
+            "Consultar Cuidados": "http://localhost:8080/consultarCuidadosAnimal"
+        };
+
+        const userRedirectMapping = {
+            "Cadastrar": "http://localhost:8080/cadastroUsuario",
+            "Dados": "http://localhost:8080/listaUsuarios",
+            "Alterar dados": "http://localhost:8080/alterarUsuario",
+            "Consultar Cuidados": "http://localhost:8080/consultarCuidadosUsuario"
         };
 
         document.querySelectorAll(".submenu-item").forEach(item => {
             const trimmedText = item.textContent.trim();
-            if (redirectMapping[trimmedText]) {
+            if (redirectMapping[trimmedText] || userRedirectMapping[trimmedText]) {
                 item.addEventListener("click", function() {
-                    window.location.href = redirectMapping[trimmedText];
+                    if (item.closest('.submenu').previousElementSibling.textContent.includes("Animais")) {
+                        window.location.href = redirectMapping[trimmedText];
+                    } else if (item.closest('.submenu').previousElementSibling.textContent.includes("Usuário")) {
+                        window.location.href = userRedirectMapping[trimmedText];
+                    }
                 });
             }
         });
