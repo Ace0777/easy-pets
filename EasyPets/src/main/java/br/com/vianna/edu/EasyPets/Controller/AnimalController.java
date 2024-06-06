@@ -34,4 +34,10 @@ public class AnimalController {
         model.addAttribute("animais", animais);
         return "listaAnimais";
     }
+
+    @GetMapping("/animal/remover/{id}")
+    public String removerAnimal(@PathVariable("id") final Long id ){
+        repository.deleteById(id);
+        return "redirect:/listaAnimais";
+    }
 }
