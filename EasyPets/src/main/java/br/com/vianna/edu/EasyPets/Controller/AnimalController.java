@@ -36,8 +36,26 @@ public class AnimalController {
     }
 
     @GetMapping("/animal/remover/{id}")
-    public String removerAnimal(@PathVariable("id") final Long id ){
+    public String removerAnimal(@PathVariable("id") final Long id ) {
         repository.deleteById(id);
         return "redirect:/listaAnimais";
+    }
+
+    @GetMapping("/animal/{id}")
+    @ResponseBody
+    public Animal buscarAnimal(@PathVariable("id") final Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    @PutMapping("/animal/atualizar/{id}")
+    @ResponseBody
+    public Animal atualizarAnimal(@PathVariable Long id, @RequestBody Animal animal) {
+        Animal animalExistente = repository.findById(id).orElseThrow(() -> new RuntimeException("Animal não encontrado"));
+        animalExistente.setNome(animal.getNome());
+        animalExistente.setPeso(animal.getPeso());
+        animalExistente.setDataNascimento(animal.getDataNascimento());
+        animalExistente.setTipoAnimal(animal.getTipoAnimal());
+        animalExistente.setSexo(animal.getSexo());
+        return repository.save(animalExistente);
     }
 }
