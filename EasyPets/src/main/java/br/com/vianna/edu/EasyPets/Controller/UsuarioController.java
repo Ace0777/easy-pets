@@ -73,4 +73,9 @@ public class UsuarioController {
         return "login";
     }
 
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
+    }
 }
