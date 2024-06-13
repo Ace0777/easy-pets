@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/tarefa")
 public class TarefaController {
     @Autowired
     private TarefaRepository tarefaRepository;
@@ -28,11 +28,13 @@ public class TarefaController {
     private UserRepository userRepository;
 
     @GetMapping("/cadastroTarefa")
-    public String tarefa() {
-        return "listaAnimaisCuidado";
+    public String tarefa(Model model) {
+        List<Animal> animais = animalRepository.findAll();
+        model.addAttribute("animais", animais);
+        return "listaAnimaisTarefa";
     }
 
-    @PostMapping("/tarefa/cadastrar")
+    @PostMapping("/cadastrar")
     public String cadastrarTarefa
             (@RequestParam("animalId") Long animalId,
             @RequestParam("descricao") String descricao,
@@ -53,10 +55,10 @@ public class TarefaController {
 
         tarefaRepository.save(tarefa);
 
-        return "redirect:/home";
+        return "redirect:/home" + "?tipoUser=" + cuidador.getTipoUser().toString();
     }
 
-    @GetMapping("/tarefa/listaTarefas")
+    @GetMapping("/listaTarefas")
     public String mostrarTarefas(Model model, HttpSession session) {
         User usuarioLogado = (User) session.getAttribute("usuarioLogado");
 

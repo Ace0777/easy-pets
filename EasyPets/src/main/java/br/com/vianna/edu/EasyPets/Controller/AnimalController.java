@@ -2,6 +2,8 @@ package br.com.vianna.edu.EasyPets.Controller;
 
 import br.com.vianna.edu.EasyPets.Model.animal.Animal;
 import br.com.vianna.edu.EasyPets.Model.animal.AnimalRepository;
+import br.com.vianna.edu.EasyPets.Model.user.User;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/animal")
 public class AnimalController {
 
     @Autowired
@@ -22,10 +24,12 @@ public class AnimalController {
         return "cadastroAnimal";
     }
 
-    @PostMapping("/animal/cadastrar")
-    public String salvarAnimal(@ModelAttribute Animal animal) {
+    @PostMapping("/cadastrar")
+    public String salvarAnimal(@ModelAttribute Animal animal, HttpSession session) {
         repository.save(animal);
-        return "redirect:/home";
+
+        User usuario = (User) session.getAttribute("usuarioLogado");
+        return "redirect:/home" + "?tipoUser=" + usuario.getTipoUser().toString();
     }
 
     @GetMapping("/listaAnimais")
@@ -35,26 +39,26 @@ public class AnimalController {
         return "listaAnimais";
     }
 
-    @GetMapping("/listaAnimaisCuidado")
-    public String listarAnimaisCuidado(Model model) {
+    @GetMapping("/listaAnimaisTarefa")
+    public String listarAnimaisTarefa(Model model) {
         List<Animal> animais = repository.findAll();
         model.addAttribute("animais", animais);
-        return "listaAnimaisCuidado";
+        return "listaAnimaisTarefa";
     }
 
-    @GetMapping("/animal/remover/{id}")
+    @GetMapping("/remover/{id}")
     public String removerAnimal(@PathVariable("id") final Long id ) {
         repository.deleteById(id);
         return "redirect:/listaAnimais";
     }
 
-    @GetMapping("/animal/{id}")
+    @GetMapping("/{id}")
     @ResponseBody
     public Animal buscarAnimal(@PathVariable("id") final Long id) {
         return repository.findById(id).orElse(null);
     }
 
-    @PutMapping("/animal/atualizar/{id}")
+    @PutMapping("/atualizar/{id}")
     @ResponseBody
     public Animal atualizarAnimal(@PathVariable Long id, @RequestBody Animal animal) {
         Animal animalExistente = repository.findById(id).orElseThrow(() -> new RuntimeException("Animal não encontrado"));

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EasyPets Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.16.13/antd.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         body {
             background-color: #f0f2f5;
@@ -99,6 +101,15 @@
             cursor: pointer;
             padding: 0;
         }
+
+        #myChart {
+            margin-top: 24px;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -115,13 +126,12 @@
             <svg class="anticon" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M2.003 5.884L10 9.882l7.997-3.998A1 1 0 0 0 17 4.382V4a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v.382a1 1 0 0 0-.997 1.502zM10 12.118L2.003 8.12A1 1 0 0 0 1 8.618V16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.618a1 1 0 0 0-1.003-.498L10 12.118z"/>
             </svg>
-            Animals
+            Animais
         </li>
         <ul class="submenu">
             <li class="submenu-item">Dados</li>
-            <li class="submenu-item">Alterar dados</li>
             <li class="submenu-item">Cadastrar</li>
-            <li class="submenu-item">Consultar Cuidados</li>
+            <li class="submenu-item">Criar Tarefas</li>
         </ul>
         <li class="menu-item">
             <svg class="anticon" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor">
@@ -131,9 +141,8 @@
         </li>
         <ul class="submenu">
             <li class="submenu-item">Dados</li>
-            <li class="submenu-item">Alterar dados</li>
             <li class="submenu-item">Cadastrar</li>
-            <li class="submenu-item">Consultar Cuidados</li>
+            <li class="submenu-item">Minhas Tarefas</li>
         </ul>
         <button id="logout" class="menu-item" onclick="logout()">
             <svg class="anticon" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor">
@@ -149,10 +158,6 @@
         <li class="list-item" id="itemAnimais">
             <span>Animais</span>
             <span class="tag" id="qtdAnimais">0</span>
-        </li>
-        <li class="list-item" id="itemConsultas">
-            <span>Consultas</span>
-            <span class="tag" id="qtdConsultas">0</span>
         </li>
         <li class="list-item" id="itemCuidadores">
             <span>Cuidadores</span>
@@ -175,6 +180,7 @@
             <span class="tag" id="qtdAtvFeitas">0</span>
         </li>
     </ul>
+    <canvas id="myChart" width="400" height="200"></canvas>
 </div>
 <script>
     document.querySelectorAll('.menu-item').forEach(item => {
@@ -184,23 +190,24 @@
     });
 
     document.addEventListener("DOMContentLoaded", function() {
-        const redirectMapping = {
-            "Cadastrar": "http://localhost:8080/cadastroAnimal",
-            "Dados": "http://localhost:8080/listaAnimais",
-            "Consultar Cuidados": "http://localhost:8080/consultarCuidadosAnimal"
+        const animalRedirectMapping = {
+            "Cadastrar": "http://localhost:8080/animal/cadastroAnimal",
+            "Dados": "http://localhost:8080/animal/listaAnimais",
+            "Criar Tarefas": "http://localhost:8080/tarefa/cadastroTarefa",
         };
 
         const userRedirectMapping = {
-            "Cadastrar": "http://localhost:8080/cadastroUsuario",
-            "Dados": "http://localhost:8080/listaUsuarios",
+            "Cadastrar": "http://localhost:8080/usuario/cadastroUsuario",
+            "Dados": "http://localhost:8080/usuario/listaUsuarios",
+            "Minhas Tarefas": "http://localhost:8080/tarefa/listaTarefas",
         };
 
         document.querySelectorAll(".submenu-item").forEach(item => {
             const trimmedText = item.textContent.trim();
-            if (redirectMapping[trimmedText] || userRedirectMapping[trimmedText]) {
+            if (animalRedirectMapping[trimmedText] || userRedirectMapping[trimmedText]) {
                 item.addEventListener("click", function() {
                     if (item.closest('.submenu').previousElementSibling.textContent.includes("Animais")) {
-                        window.location.href = redirectMapping[trimmedText];
+                        window.location.href = animalRedirectMapping[trimmedText];
                     } else if (item.closest('.submenu').previousElementSibling.textContent.includes("Usuário")) {
                         window.location.href = userRedirectMapping[trimmedText];
                     }
@@ -208,60 +215,101 @@
             }
         });
 
-        function getTipoUserFromUrl() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('tipoUser') || 'ADMINISTRADOR';
-        }
+    function getTipoUserFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('tipoUser');
+    }
 
-        function updateDashboard(data) {
-            document.getElementById('qtdAnimais').textContent = data.qtdAnimais;
-            document.getElementById('qtdConsultas').textContent = data.qtdConsultas || 0;  // Supondo que existe qtdConsultas
-            document.getElementById('qtdCuidadores').textContent = data.qtdCuidadores;
-            document.getElementById('qtdVeterinarios').textContent = data.qtdVeterinarios;
-            document.getElementById('qtdAdministradores').textContent = data.qtdAdministradores;
-            document.getElementById('qtdAtvAFazer').textContent = data.qtdAtvAFazer;
-            document.getElementById('qtdAtvFeitas').textContent = data.qtdAtvFeitas;
-        }
-
-        function adjustVisibilityByTipoUser(tipoUser) {
-            if (tipoUser === 'CUIDADOR') {
-                document.getElementById('itemVeterinarios').style.display = 'none';
-                document.getElementById('itemConsultas').style.display = 'none';
-                document.getElementById('itemAdministradores').style.display = 'none';
-            } else if (tipoUser === 'VETERINARIO') {
-                document.getElementById('itemCuidadores').style.display = 'none';
-                document.getElementById('itemAtvAFazer').style.display = 'none';
-                document.getElementById('itemAtvFeitas').style.display = 'none';
-                document.getElementById('itemAdministradores').style.display = 'none';
-            }
-        }
+    function updateDashboard(data) {
+        document.getElementById('qtdAnimais').textContent = data.qtdAnimais;
+        document.getElementById('qtdCuidadores').textContent = data.qtdCuidadores;
+        document.getElementById('qtdVeterinarios').textContent = data.qtdVeterinarios;
+        document.getElementById('qtdAdministradores').textContent = data.qtdAdministradores;
+        document.getElementById('qtdAtvAFazer').textContent = data.qtdAtvAFazer;
+        document.getElementById('qtdAtvFeitas').textContent = data.qtdAtvFeitas;
 
         const tipoUser = getTipoUserFromUrl();
-        adjustVisibilityByTipoUser(tipoUser);
+        if (tipoUser === 'ADMINISTRADOR') {
+            createChart(data);
+        }
+    }
 
-        fetch('http://localhost:8080/dashboard/admin')
-            .then(response => response.json())
-            .then(data => updateDashboard(data))
-            .catch(error => console.error('Erro ao carregar os dados da dashboard:', error));
+    function adjustVisibilityByTipoUser(tipoUser) {
+        if (tipoUser === 'CUIDADOR') {
+            document.getElementById('itemVeterinarios').style.display = 'none';
+            document.getElementById('itemAdministradores').style.display = 'none';
+        } else if (tipoUser === 'VETERINARIO') {
+            document.getElementById('itemCuidadores').style.display = 'none';
+            document.getElementById('itemAtvAFazer').style.display = 'none';
+            document.getElementById('itemAtvFeitas').style.display = 'none';
+            document.getElementById('itemAdministradores').style.display = 'none';
+        } else {
+            document.getElementById('myChart').style.display = 'block';
+        }
+    }
+
+    const tipoUser = getTipoUserFromUrl();
+    adjustVisibilityByTipoUser(tipoUser);
+
+    fetch('http://localhost:8080/dashboard/admin')
+        .then(response => response.json())
+        .then(data => updateDashboard(data))
+        .catch(error => console.error('Erro ao carregar os dados da dashboard:', error));
+
     });
 
-    function logout() {
-        fetch('/logout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({})
-        })
-        .then(response => {
-            if (response.ok) {
-                window.location.href = '/login'; // Redireciona para a página de login após logout
-            } else {
-                console.error('Erro ao fazer logout');
+function logout() {
+    fetch('/usuario/logout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => {
+        if (response.ok) {
+            window.location.href = '/login'; // Redireciona para a página de login após logout
+        } else {
+            console.error('Erro ao fazer logout');
+        }
+    })
+    .catch(error => console.error('Erro ao fazer logout:', error));
+}
+
+function createChart(data) {
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Animais', 'Cuidadores', 'Veterinários', 'Administradores'],
+            datasets: [{
+                label: 'Quantidade',
+                data: [data.qtdAnimais, data.qtdCuidadores, data.qtdVeterinarios, data.qtdAdministradores],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
-        })
-        .catch(error => console.error('Erro ao fazer logout:', error));
-    }
+        }
+    });
+}
+
 </script>
 </body>
 </html>

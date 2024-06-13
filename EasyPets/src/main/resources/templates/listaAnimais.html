@@ -84,8 +84,8 @@
             <td th:text="${animal.dataNascimento}"></td>
             <td th:text="${animal.tipoAnimal}"></td>
             <td th:text="${animal.sexo}"></td>
-            <td><a th:href="@{/animal/remover/{id} (id=${animal.id})}">remover</a></td>
-            <td><a href="javascript:void(0);" th:onclick="'openModal(' + ${animal.id} + ')'">editar</a></td>
+            <td><a th:href="@{/animal/remover/{id} (id=${animal.id})}">Remover</a></td>
+            <td><a href="javascript:void(0);" th:onclick="'openModal(' + ${animal.id} + ')'">Editar</a></td>
         </tr>
         </tbody>
     </table>
