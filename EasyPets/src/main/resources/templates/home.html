@@ -137,35 +137,31 @@
     <ul class="list">
         <li class="list-item">
             <span>Animais</span>
-            <span class="tag">2938</span>
+            <span class="tag" id="qtdAnimais">0</span>
         </li>
         <li class="list-item">
             <span>Consultas</span>
-            <span class="tag">2938</span>
+            <span class="tag" id="qtdConsultas">0</span>
         </li>
         <li class="list-item">
             <span>Cuidadores</span>
-            <span class="tag">2938</span>
+            <span class="tag" id="qtdCuidadores">0</span>
         </li>
         <li class="list-item">
             <span>Veterinários</span>
-            <span class="tag">2938</span>
+            <span class="tag" id="qtdVeterinarios">0</span>
         </li>
         <li class="list-item">
-            <span>Veterinarios ativos</span>
-            <span class="tag">2938</span>
+            <span>Administradores</span>
+            <span class="tag" id="qtdAdministradores">0</span>
         </li>
         <li class="list-item">
             <span>Atividades a fazer</span>
-            <span class="tag">2938</span>
+            <span class="tag" id="qtdAtvAFazer">0</span>
         </li>
         <li class="list-item">
             <span>Atividades feitas</span>
-            <span class="tag">2938</span>
-        </li>
-        <li class="list-item">
-            <span>Atividades finalizadas</span>
-            <span class="tag">2938</span>
+            <span class="tag" id="qtdAtvFeitas">0</span>
         </li>
     </ul>
 </div>
@@ -177,7 +173,7 @@
     });
 
     document.addEventListener("DOMContentLoaded", function() {
-          const redirectMapping = {
+        const redirectMapping = {
             "Cadastrar": "http://localhost:8080/cadastroAnimal",
             "Dados": "http://localhost:8080/listaAnimais",
             "Consultar Cuidados": "http://localhost:8080/consultarCuidadosAnimal"
@@ -200,6 +196,21 @@
                 });
             }
         });
+
+        function updateDashboard(data) {
+            document.getElementById('qtdAnimais').textContent = data.qtdAnimais;
+            document.getElementById('qtdConsultas').textContent = data.qtdConsultas || 0;  // Supondo que existe qtdConsultas
+            document.getElementById('qtdCuidadores').textContent = data.qtdCuidadores;
+            document.getElementById('qtdVeterinarios').textContent = data.qtdVeterinarios;
+            document.getElementById('qtdAdministradores').textContent = data.qtdAdministradores;
+            document.getElementById('qtdAtvAFazer').textContent = data.qtdAtvAFazer;
+            document.getElementById('qtdAtvFeitas').textContent = data.qtdAtvFeitas;
+        }
+
+        fetch('http://localhost:8080/dashboard/admin')
+            .then(response => response.json())
+            .then(data => updateDashboard(data))
+            .catch(error => console.error('Erro ao carregar os dados da dashboard:', error));
     });
 </script>
 </body>
