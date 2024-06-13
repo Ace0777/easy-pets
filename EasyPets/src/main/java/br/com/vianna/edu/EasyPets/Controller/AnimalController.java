@@ -35,6 +35,13 @@ public class AnimalController {
         return "listaAnimais";
     }
 
+    @GetMapping("/listaAnimaisCuidado")
+    public String listarAnimaisCuidado(Model model) {
+        List<Animal> animais = repository.findAll();
+        model.addAttribute("animais", animais);
+        return "listaAnimaisCuidado";
+    }
+
     @GetMapping("/animal/remover/{id}")
     public String removerAnimal(@PathVariable("id") final Long id ) {
         repository.deleteById(id);

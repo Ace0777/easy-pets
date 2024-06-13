@@ -41,7 +41,7 @@
         <div class="logo-container">
             <img src="https://cdn.dribbble.com/users/3499895/screenshots/6481025/tiger_zoo_logo.jpg" alt="Logo" style="width: 200px; height: auto;" />
         </div>
-        <form th:action="@{/login}" method="post" onsubmit="return validateForm()">
+        <form th:action="@{/login}" method="post" name="loginForm" onsubmit="return validateForm()">
             <div class="ant-form-item">
                 <label class="ant-form-item-label">Usuário</label>
                 <div class="ant-form-item-control">
@@ -57,6 +57,11 @@
             <div class="ant-form-item">
                 <div class="ant-form-item-control">
                     <button class="ant-btn ant-btn-primary" type="submit">Login</button>
+                </div>
+            </div>
+            <div class="ant-form-item" th:if="${error}">
+                <div class="ant-form-item-control">
+                    <span class="ant-form-text" style="color: red;" th:text="${error}"></span>
                 </div>
             </div>
         </form>

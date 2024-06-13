@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Animais</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.16.13/antd.min.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+        h1 {
+            text-align: center;
+            color: #4cae4c;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4cae4c;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Animais</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Peso</th>
+            <th>Data de Nascimento</th>
+            <th>Tipo</th>
+            <th>Sexo</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="animal : ${animais}">
+            <td th:text="${animal.nome}"></td>
+            <td th:text="${animal.peso}"></td>
+            <td th:text="${animal.dataNascimento}"></td>
+            <td th:text="${animal.tipoAnimal}"></td>
+            <td th:text="${animal.sexo}"></td>
+            <td><a href="javascript:void(0);" th:onclick="'openModal(' + ${animal.id} + ')'">cadastrar cuidado</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="modalOverlay" class="modal-overlay">
+    <div class="modal-content">
+        <div class="ant-modal-header">
+            <div class="ant-modal-title">Cadastrar Tarefa</div>
+        </div>
+        <div class="ant-modal-body">
+            <form id="taskForm">
+                <input type="hidden" id="taskId" />
+                <input type="hidden" id="animalId" />
+                <div class="ant-form-item">
+                    <label>Descrição</label>
+                    <input type="text" id="taskDescricao" class="ant-input" />
+                </div>
+                <div class="ant-form-item">
+                    <label>Data de Realização</label>
+                    <input type="date" id="taskDataRealizacao" class="ant-input" />
+                </div>
+                <div class="ant-form-item">
+                    <label>Data Limite</label>
+                    <input type="date" id="taskDataLimite" class="ant-input" />
+                </div>
+            </form>
+        </div>
+        <div class="ant-modal-footer">
+            <button type="button" class="ant-btn" onclick="closeModal()">Cancelar</button>
+            <button type="button" class="ant-btn ant-btn-primary" onclick="saveTask()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedAnimalId = null;
+
+    function openModal(animalId) {
+        selectedAnimalId = animalId;
+        $('#animalId').val(animalId);
+        $('#taskId').val('');
+        $('#taskDescricao').val('');
+        $('#taskDataRealizacao').val('');
+        $('#taskDataLimite').val('');
+        $('#modalOverlay').css('display', 'flex');
+    }
+
+    function closeModal() {
+        $('#modalOverlay').css('display', 'none');
+    }
+
+    function saveTask() {
+        const descricao = $('#taskDescricao').val();
+        const dataRealizacao = $('#taskDataRealizacao').val();
+        const dataLimite = $('#taskDataLimite').val();
+        const animalId = selectedAnimalId;
+
+        $.post("/tarefa/cadastrar", {
+            animalId: animalId,
+            descricao: descricao,
+            dataRealizacao: dataRealizacao,
+            dataLimite: dataLimite
+        }).done(function () {
+            closeModal();
+            location.reload();
+        }).fail(function () {
+            alert("Erro ao salvar a tarefa.");
+        });
+    }
+</script>
+</body>
+</html>

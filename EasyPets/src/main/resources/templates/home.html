@@ -177,18 +177,15 @@
     });
 
     document.addEventListener("DOMContentLoaded", function() {
-        const redirectMapping = {
+          const redirectMapping = {
             "Cadastrar": "http://localhost:8080/cadastroAnimal",
             "Dados": "http://localhost:8080/listaAnimais",
-            "Alterar dados": "http://localhost:8080/alterarAnimal",
             "Consultar Cuidados": "http://localhost:8080/consultarCuidadosAnimal"
         };
 
         const userRedirectMapping = {
             "Cadastrar": "http://localhost:8080/cadastroUsuario",
             "Dados": "http://localhost:8080/listaUsuarios",
-            "Alterar dados": "http://localhost:8080/alterarUsuario",
-            "Consultar Cuidados": "http://localhost:8080/consultarCuidadosUsuario"
         };
 
         document.querySelectorAll(".submenu-item").forEach(item => {

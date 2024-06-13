@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tarefas de Cuidados</title>
+    <style>
+        body {
+            background-color: #f0f2f5;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            color: #4cae4c;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4cae4c;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h1>Tarefas de Cuidados</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Descrição</th>
+        <th>Animal</th>
+        <th>Cuidador</th>
+        <th>Data Realização</th>
+        <th>Data Limite</th>
+        <th>Realizada</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="tarefa : ${tarefas}">
+        <td th:text="${tarefa.id}"></td>
+        <td th:text="${tarefa.descricao}"></td>
+        <td th:text="${tarefa.animal.nome}"></td>
+        <td th:text="${tarefa.cuidador.nome}"></td>
+        <td th:text="${tarefa.dataRealizacaoTarefa}"></td>
+        <td th:text="${tarefa.dataLimiteTarefa}"></td>
+        <td th:text="${tarefa.realizada} ? 'Sim' : 'Não'"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

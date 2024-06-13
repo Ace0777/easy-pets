@@ -2,6 +2,7 @@ package br.com.vianna.edu.EasyPets.Controller;
 
 import br.com.vianna.edu.EasyPets.Model.user.User;
 import br.com.vianna.edu.EasyPets.Model.user.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,6 +60,17 @@ public class UsuarioController {
         usuarioExistente.setSenha(usuario.getSenha());
         usuarioExistente.setTipoUser(usuario.getTipoUser());
         return repository.save(usuarioExistente);
+    }
+
+    @PostMapping("/login")
+    public String validarLogin(@RequestParam("usuario") String login, @RequestParam("senha") String senha, HttpSession session, Model model) {
+        User usuario = repository.findByLogin(login);
+        if (usuario != null && usuario.getSenha().equals(senha)) {
+            session.setAttribute("usuarioLogado", usuario);
+            return "redirect:/home";
+        }
+        model.addAttribute("error", "Usuário ou senha inválidos");
+        return "login";
     }
 
 }
