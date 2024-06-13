@@ -135,31 +135,31 @@
 <div class="content">
     <h2 class="header">Zoologico</h2>
     <ul class="list">
-        <li class="list-item">
+        <li class="list-item" id="itemAnimais">
             <span>Animais</span>
             <span class="tag" id="qtdAnimais">0</span>
         </li>
-        <li class="list-item">
+        <li class="list-item" id="itemConsultas">
             <span>Consultas</span>
             <span class="tag" id="qtdConsultas">0</span>
         </li>
-        <li class="list-item">
+        <li class="list-item" id="itemCuidadores">
             <span>Cuidadores</span>
             <span class="tag" id="qtdCuidadores">0</span>
         </li>
-        <li class="list-item">
+        <li class="list-item" id="itemVeterinarios">
             <span>Veterinários</span>
             <span class="tag" id="qtdVeterinarios">0</span>
         </li>
-        <li class="list-item">
+        <li class="list-item" id="itemAdministradores">
             <span>Administradores</span>
             <span class="tag" id="qtdAdministradores">0</span>
         </li>
-        <li class="list-item">
+        <li class="list-item" id="itemAtvAFazer">
             <span>Atividades a fazer</span>
             <span class="tag" id="qtdAtvAFazer">0</span>
         </li>
-        <li class="list-item">
+        <li class="list-item" id="itemAtvFeitas">
             <span>Atividades feitas</span>
             <span class="tag" id="qtdAtvFeitas">0</span>
         </li>
@@ -197,6 +197,11 @@
             }
         });
 
+        function getTipoUserFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('tipoUser') || 'ADMINISTRADOR';
+        }
+
         function updateDashboard(data) {
             document.getElementById('qtdAnimais').textContent = data.qtdAnimais;
             document.getElementById('qtdConsultas').textContent = data.qtdConsultas || 0;  // Supondo que existe qtdConsultas
@@ -206,6 +211,22 @@
             document.getElementById('qtdAtvAFazer').textContent = data.qtdAtvAFazer;
             document.getElementById('qtdAtvFeitas').textContent = data.qtdAtvFeitas;
         }
+
+        function adjustVisibilityByTipoUser(tipoUser) {
+            if (tipoUser === 'CUIDADOR') {
+                document.getElementById('itemVeterinarios').style.display = 'none';
+                document.getElementById('itemConsultas').style.display = 'none';
+                document.getElementById('itemAdministradores').style.display = 'none';
+            } else if (tipoUser === 'VETERINARIO') {
+                document.getElementById('itemCuidadores').style.display = 'none';
+                document.getElementById('itemAtvAFazer').style.display = 'none';
+                document.getElementById('itemAtvFeitas').style.display = 'none';
+                document.getElementById('itemAdministradores').style.display = 'none';
+            }
+        }
+
+        const tipoUser = getTipoUserFromUrl();
+        adjustVisibilityByTipoUser(tipoUser);
 
         fetch('http://localhost:8080/dashboard/admin')
             .then(response => response.json())
