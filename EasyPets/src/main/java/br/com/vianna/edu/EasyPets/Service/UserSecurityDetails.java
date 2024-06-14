@@ -26,6 +26,10 @@ public class UserSecurityDetails implements UserDetails {
 
     }
 
+    public User getUser() {
+        return user;
+    }
+
     @Override
     public String getPassword() {
         return new BCryptPasswordEncoder().encode(user.getSenha());
@@ -34,6 +38,10 @@ public class UserSecurityDetails implements UserDetails {
     @Override
     public String getUsername() {
         return user.getLogin();
+    }
+
+    public String getTipoUserString() {
+        return user.getTipoUser().toString();
     }
 
     @Override

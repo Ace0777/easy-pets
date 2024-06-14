@@ -2,6 +2,7 @@ package br.com.vianna.edu.EasyPets.Service;
 
 import br.com.vianna.edu.EasyPets.Model.user.User;
 import br.com.vianna.edu.EasyPets.Model.user.UserRepository;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,10 +16,14 @@ public class AuthorizationService implements UserDetailsService {
     @Autowired
     private UserRepository repository;
 
+    @Getter
+    private User user;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = repository.findByLogin(username);
+
+        this.user = user;
 
         if (user != null) {
             return new UserSecurityDetails(user);
@@ -27,4 +32,6 @@ public class AuthorizationService implements UserDetailsService {
         }
 
     }
+
+
 }
