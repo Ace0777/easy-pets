@@ -2,8 +2,14 @@ package br.com.vianna.edu.EasyPets.Model.user;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Table(name = "users")
 @Entity(name = "User")
@@ -87,4 +93,6 @@ public class User {
     public void setTipoUser(EtipoUser tipoUser) {
         this.tipoUser = tipoUser;
     }
+
+
 }
