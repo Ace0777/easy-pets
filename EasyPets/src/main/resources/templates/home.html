@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -144,12 +146,14 @@
             <li class="submenu-item">Cadastrar</li>
             <li class="submenu-item">Minhas Tarefas</li>
         </ul>
-        <button id="logout" class="menu-item" onclick="logout()">
-            <svg class="anticon" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M6 2a1 1 0 0 0 0 2h1v12H6a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-1V4h1a1 1 0 1 0 0-2H6z"/>
-            </svg>
-            Sair
-        </button>
+        <form th:action="@{/logout}" method="post">
+            <button id="logout" class="menu-item" onclick="logout()">
+                <svg class="anticon" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M6 2a1 1 0 0 0 0 2h1v12H6a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-1V4h1a1 1 0 1 0 0-2H6z"/>
+                </svg>
+                Sair
+            </button>
+        </form>
     </ul>
 </div>
 <div class="content">
@@ -258,57 +262,57 @@
 
     });
 
-function logout() {
-    fetch('/usuario/logout', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({})
-    })
-    .then(response => {
-        if (response.ok) {
-            window.location.href = '/login'; // Redireciona para a página de login após logout
-        } else {
-            console.error('Erro ao fazer logout');
-        }
-    })
-    .catch(error => console.error('Erro ao fazer logout:', error));
-}
+    /*function logout() {
+        fetch('/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = '/login';
+            } else {
+                console.error('Erro ao fazer logout');
+            }
+        })
+        .catch(error => console.error('Erro ao fazer logout:', error));
+    }*/
 
-function createChart(data) {
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Animais', 'Cuidadores', 'Veterinários', 'Administradores'],
-            datasets: [{
-                label: 'Quantidade',
-                data: [data.qtdAnimais, data.qtdCuidadores, data.qtdVeterinarios, data.qtdAdministradores],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+    function createChart(data) {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Animais', 'Cuidadores', 'Veterinários', 'Administradores'],
+                datasets: [{
+                    label: 'Quantidade',
+                    data: [data.qtdAnimais, data.qtdCuidadores, data.qtdVeterinarios, data.qtdAdministradores],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
-}
+        });
+    }
 
 </script>
 </body>

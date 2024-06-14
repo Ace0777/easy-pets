@@ -48,16 +48,20 @@ public class SecurityConfigurations {
 
 
         http.authorizeHttpRequests( (authorize) -> authorize
-                .requestMatchers("/", "/login").permitAll()
-                .requestMatchers("/user/cadastro").hasRole("ADMINISTRADOR")
+                .requestMatchers("/", "/login", "/logout", "/negado").permitAll()
+                .requestMatchers("/usuario/cadastroUsuario","/usuario/listaUsuarios").hasRole("ADMINISTRADOR")
                 .anyRequest().authenticated()
         ) .formLogin(form -> form
                 .loginPage("/login")
                 .successHandler(new CustomAuthenticationSuccessHandler())
                 .failureUrl("/login?error=true")
                 .permitAll()
-                //.defaultSuccessUrl("/home" + userDetailsService.getUser().getTipoUser().toString(), true)
-        )
+        ).logout( (logout) -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+                .deleteCookies("JSESSIONID")
+                .permitAll()
+                )
                 .exceptionHandling( (ex) -> ex
                 .accessDeniedPage("/negado")
         );

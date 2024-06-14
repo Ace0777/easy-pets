@@ -22,5 +22,8 @@ public class HomeController {
         return "home";
     }
 
-
+    @GetMapping("/negado")
+    public String negado() {
+        return "negado";
+    }
 }

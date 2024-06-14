@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Negado</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+    }
+
+    body, html {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f0f0f0;
+    }
+
+    .container {
+        text-align: center;
+        background: #fff;
+        padding: 50px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .error-message h1 {
+        font-size: 3em;
+        color: #e74c3c;
+        margin-bottom: 20px;
+    }
+
+    .error-message p {
+        font-size: 1.2em;
+        margin-bottom: 30px;
+        color: #333;
+    }
+
+    .error-message button {
+        padding: 10px 20px;
+        font-size: 1em;
+        color: #fff;
+        background: #e74c3c;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .error-message button:hover {
+        background: #c0392b;
+    }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="error-message">
+        <h1>Acesso Negado</h1>
+        <p>Você não tem permissão para acessar esta página.</p>
+        <button onclick="goBack()">Voltar</button>
+    </div>
+</div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+</body>
+</html>
