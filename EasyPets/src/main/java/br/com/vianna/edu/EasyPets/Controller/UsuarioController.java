@@ -1,5 +1,6 @@
 package br.com.vianna.edu.EasyPets.Controller;
 
+import br.com.vianna.edu.EasyPets.Dtos.UserUpdateDto;
 import br.com.vianna.edu.EasyPets.Model.user.User;
 import br.com.vianna.edu.EasyPets.Model.user.UserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -50,7 +51,7 @@ public class UsuarioController {
     @GetMapping("/remover/{id}")
     public String removerUsuario(@PathVariable("id") final Long id ) {
         repository.deleteById(id);
-        return "redirect:/listaUsuarios";
+        return "redirect:/usuario/listaUsuarios";
     }
 
     @GetMapping("/{id}")
@@ -59,9 +60,22 @@ public class UsuarioController {
         return repository.findById(id).orElse(null);
     }
 
+    @GetMapping("/meusDados")
+    public String meusDados(Model model, HttpSession session) {
+
+        User user = (User) session.getAttribute("usuarioLogado");
+
+
+        User userBanco = repository.findById(user.getId()).orElse(null);
+
+        model.addAttribute("usuario",userBanco);
+        return "meusDados";
+    }
+
+
     @PutMapping("/atualizar/{id}")
     @ResponseBody
-    public User atualizarUsuario(@PathVariable Long id, @RequestBody User usuario) {
+    public User atualizarUsuario(@PathVariable final Long id, @RequestBody UserUpdateDto usuario) {
         User usuarioExistente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
         usuarioExistente.setNome(usuario.getNome());
@@ -69,9 +83,10 @@ public class UsuarioController {
         usuarioExistente.setCpf(usuario.getCpf());
         usuarioExistente.setLogin(usuario.getLogin());
         usuarioExistente.setSenha(usuario.getSenha());
-        usuarioExistente.setTipoUser(usuario.getTipoUser());
+
         return repository.save(usuarioExistente);
     }
+
 
     //Login e Logout sendo feio pelo spring Security
 
