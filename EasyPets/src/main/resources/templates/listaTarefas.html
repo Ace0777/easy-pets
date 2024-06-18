@@ -2,12 +2,22 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tarefas</title>
     <style>
         body {
             background-color: #f0f2f5;
             margin: 0;
             font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
         }
         h1 {
             text-align: center;
@@ -17,9 +27,6 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         th, td {
             padding: 12px;
@@ -33,34 +40,145 @@
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+        }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
-<h1>Tarefas de Cuidados</h1>
+<div class="container">
+    <h1>Tarefas de Cuidados</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Descrição</th>
+            <th>Animal</th>
+            <th>Cuidador</th>
+            <th>Data Realização</th>
+            <th>Data Limite</th>
+            <th>Realizada</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tarefa : ${tarefas}">
+            <td th:text="${tarefa.id}"></td>
+            <td th:text="${tarefa.descricao}"></td>
+            <td th:text="${tarefa.animal.nome}"></td>
+            <td th:text="${tarefa.cuidador.nome}"></td>
+            <td th:text="${tarefa.dataRealizacaoTarefa}"></td>
+            <td th:text="${tarefa.dataLimiteTarefa}"></td>
+            <td th:text="${tarefa.realizada} ? 'Sim' : 'Não'"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Descrição</th>
-        <th>Animal</th>
-        <th>Cuidador</th>
-        <th>Data Realização</th>
-        <th>Data Limite</th>
-        <th>Realizada</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="tarefa : ${tarefas}">
-        <td th:text="${tarefa.id}"></td>
-        <td th:text="${tarefa.descricao}"></td>
-        <td th:text="${tarefa.animal.nome}"></td>
-        <td th:text="${tarefa.cuidador.nome}"></td>
-        <td th:text="${tarefa.dataRealizacaoTarefa}"></td>
-        <td th:text="${tarefa.dataLimiteTarefa}"></td>
-        <td th:text="${tarefa.realizada} ? 'Sim' : 'Não'"></td>
-    </tr>
-    </tbody>
-</table>
+<div id="modalOverlay" class="modal-overlay">
+    <div class="modal-content">
+        <div class="ant-modal-header">
+            <div class="ant-modal-title">Editar Tarefa</div>
+        </div>
+        <div class="ant-modal-body">
+            <form id="editForm">
+                <input type="hidden" id="editId" />
+                <div class="ant-form-item">
+                    <label>Descrição</label>
+                    <input type="text" id="editDescricao" class="ant-input" />
+                </div>
+                <div class="ant-form-item">
+                    <label>Animal</label>
+                    <input type="text" id="editAnimal" class="ant-input" />
+                </div>
+                <div class="ant-form-item">
+                    <label>Cuidador</label>
+                    <input type="text" id="editCuidador" class="ant-input" />
+                </div>
+                <div class="ant-form-item">
+                    <label>Data Realização</label>
+                    <input type="date" id="editDataRealizacao" class="ant-input" />
+                </div>
+                <div class="ant-form-item">
+                    <label>Data Limite</label>
+                    <input type="date" id="editDataLimite" class="ant-input" />
+                </div>
+                <div class="ant-form-item">
+                    <label>Realizada</label>
+                    <select id="editRealizada" class="ant-select">
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="ant-modal-footer">
+            <button type="button" class="ant-btn" onclick="closeModal()">Cancelar</button>
+            <button type="button" class="ant-btn ant-btn-primary" onclick="saveChanges()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal(id) {
+        $.ajax({
+            url: `/tarefa/${id}`,
+            type: 'GET',
+            success: function(tarefa) {
+                $('#editId').val(tarefa.id);
+                $('#editDescricao').val(tarefa.descricao);
+                $('#editAnimal').val(tarefa.animal.nome);
+                $('#editCuidador').val(tarefa.cuidador.nome);
+                $('#editDataRealizacao').val(tarefa.dataRealizacaoTarefa);
+                $('#editDataLimite').val(tarefa.dataLimiteTarefa);
+                $('#editRealizada').val(tarefa.realizada);
+                $('#modalOverlay').css('display', 'flex');
+            }
+        });
+    }
+
+    function closeModal() {
+        $('#modalOverlay').css('display', 'none');
+    }
+
+    function saveChanges() {
+        const tarefaAtualizada = {
+            descricao: $('#editDescricao').val(),
+            animal: $('#editAnimal').val(),
+            cuidador: $('#editCuidador').val(),
+            dataRealizacaoTarefa: $('#editDataRealizacao').val(),
+            dataLimiteTarefa: $('#editDataLimite').val(),
+            realizada: $('#editRealizada').val() === 'true'
+        };
+
+        const id = $('#editId').val();
+
+        $.ajax({
+            url: `/tarefa/atualizar/${id}`,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(tarefaAtualizada),
+            success: function() {
+                closeModal();
+                window.location.reload();
+            }
+        });
+    }
+</script>
 </body>
 </html>
