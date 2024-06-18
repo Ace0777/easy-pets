@@ -45,9 +45,11 @@ public class SecurityConfigurations {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 
+
         http.authorizeHttpRequests( (authorize) -> authorize
                 .requestMatchers("/", "/login", "/logout", "/negado", "/usuario/meusDados").permitAll()
-                .requestMatchers("/usuario/cadastroUsuario",
+                .requestMatchers(
+                        /*"/usuario/cadastroUsuario",
                         "/usuario/listaUsuarios",
                         "/tarefa/cadastroTarefa",
                         "/tarefa/cadastroTarefa/*",
@@ -57,7 +59,10 @@ public class SecurityConfigurations {
                         "/animal/remover",
                         "/animal/remover/*",
                         "/animal/atualizar",
-                        "/animal/atualizar/*","/animal/*"
+                        "/animal/atualizar/*","/animal/*",*/
+                        "/animal/**",
+                        "/usuario/**",
+                        "/tarefa/**"
                        ).hasRole("ADMINISTRADOR")
 
                         .requestMatchers("/tarefa/cadastroTarefa",
@@ -66,6 +71,7 @@ public class SecurityConfigurations {
                                 "/animal/cadastroAnimal",
                                 "/animal/listaAnimaisTarefa"
                         ).hasRole("CUIDADOR")
+
                 .anyRequest().authenticated()
         ) .formLogin(form -> form
                 .loginPage("/login")
@@ -80,7 +86,7 @@ public class SecurityConfigurations {
                 )
                 .exceptionHandling( (ex) -> ex
                 .accessDeniedPage("/negado")
-        );
+        ).csrf(csrf->csrf.disable());
         return http.build();
     }
 

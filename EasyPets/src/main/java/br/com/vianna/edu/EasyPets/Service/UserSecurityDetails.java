@@ -21,9 +21,16 @@ public class UserSecurityDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.user.getTipoUser() == EtipoUser.ADMINISTRADOR) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
-        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-
+        if (this.user.getTipoUser() == EtipoUser.ADMINISTRADOR) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMINISTRADOR"),
+                    new SimpleGrantedAuthority("ROLE_CUIDADOR"),
+                    new SimpleGrantedAuthority("ROLE_VETERINARIO"));
+        } else if (this.user.getTipoUser() == EtipoUser.CUIDADOR) {
+            return List.of(new SimpleGrantedAuthority("ROLE_CUIDADOR"));
+        } else {
+            return List.of(new SimpleGrantedAuthority("ROLE_VETERINARIO"));
+        }
     }
 
     public User getUser() {

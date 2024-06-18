@@ -3,6 +3,7 @@ package br.com.vianna.edu.EasyPets.Controller;
 import br.com.vianna.edu.EasyPets.Model.animal.Animal;
 import br.com.vianna.edu.EasyPets.Model.animal.AnimalRepository;
 import br.com.vianna.edu.EasyPets.Model.user.User;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -61,6 +62,8 @@ public class AnimalController {
     @PutMapping("/atualizar/{id}")
     @ResponseBody
     public Animal atualizarAnimal(@PathVariable Long id, @RequestBody Animal animal) {
+
+
         Animal animalExistente = repository.findById(id).orElseThrow(() -> new RuntimeException("Animal não encontrado"));
         animalExistente.setNome(animal.getNome());
         animalExistente.setPeso(animal.getPeso());
