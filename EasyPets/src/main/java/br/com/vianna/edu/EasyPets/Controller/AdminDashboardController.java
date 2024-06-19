@@ -1,6 +1,6 @@
 package br.com.vianna.edu.EasyPets.Controller;
 
-import br.com.vianna.edu.EasyPets.Dtos.AdminUsersDto;
+import br.com.vianna.edu.EasyPets.Model.Dtos.AdminUsersDto;
 import br.com.vianna.edu.EasyPets.Service.AdminDashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

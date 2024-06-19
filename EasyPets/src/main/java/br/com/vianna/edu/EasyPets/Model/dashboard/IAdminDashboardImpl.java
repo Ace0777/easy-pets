@@ -1,5 +1,5 @@
 package br.com.vianna.edu.EasyPets.Model.dashboard;
-import br.com.vianna.edu.EasyPets.Dtos.AdminUsersDto;
+import br.com.vianna.edu.EasyPets.Model.Dtos.AdminUsersDto;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

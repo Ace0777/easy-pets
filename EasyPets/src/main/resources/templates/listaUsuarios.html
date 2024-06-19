@@ -59,6 +59,19 @@
             max-width: 500px;
             width: 100%;
         }
+
+        #btn-voltar {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        #btn-voltar:hover {
+            background-color: #0056b3;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
@@ -89,6 +102,8 @@
         </tr>
         </tbody>
     </table>
+
+    <button id="btn-voltar" onclick="goBack()">Voltar</button>
 </div>
 
 <div id="modalOverlay" class="modal-overlay">
@@ -122,8 +137,9 @@
                 <div class="ant-form-item">
                     <label>Tipo de Usuário</label>
                     <select id="editTipoUser" class="ant-select">
-                        <option value="ADMIN">Admin</option>
-                        <option value="USER">User</option>
+                        <option value="ADMINISTRADOR">Administrador</option>
+                        <option value="CUIDADOR">Cuidador</option>
+                        <option value="VETERINARIO">Veterinário</option>
                     </select>
                 </div>
             </form>
@@ -134,6 +150,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     function openModal(id) {
@@ -155,6 +172,10 @@
 
     function closeModal() {
         $('#modalOverlay').css('display', 'none');
+    }
+
+    function goBack() {
+        window.history.back();
     }
 
     function saveChanges() {

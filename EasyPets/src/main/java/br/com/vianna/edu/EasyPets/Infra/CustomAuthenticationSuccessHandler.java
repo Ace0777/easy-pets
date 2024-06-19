@@ -1,4 +1,4 @@
-package br.com.vianna.edu.EasyPets.infra;
+package br.com.vianna.edu.EasyPets.Infra;
 
 import br.com.vianna.edu.EasyPets.Service.UserSecurityDetails;
 import jakarta.servlet.ServletException;

@@ -1,6 +1,6 @@
 package br.com.vianna.edu.EasyPets.Service;
 
-import br.com.vianna.edu.EasyPets.Dtos.AdminUsersDto;
+import br.com.vianna.edu.EasyPets.Model.Dtos.AdminUsersDto;
 import br.com.vianna.edu.EasyPets.Model.dashboard.IAdminDashboard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

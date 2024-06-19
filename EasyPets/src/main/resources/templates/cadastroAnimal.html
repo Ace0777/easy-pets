@@ -106,8 +106,16 @@
             </select>
         </div>
         <button type="submit" class="form-submit">Cadastrar</button>
-        <button type="button" class="form-back" onclick="window.location.href='/animal/listaAnimais'">Voltar</button>
+        <button type="button" class="form-back" onclick="goBack()">Voltar</button>
+
     </form>
 </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
 </body>
 </html>

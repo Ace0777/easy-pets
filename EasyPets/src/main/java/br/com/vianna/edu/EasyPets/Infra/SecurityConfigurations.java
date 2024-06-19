@@ -1,4 +1,4 @@
-package br.com.vianna.edu.EasyPets.infra;
+package br.com.vianna.edu.EasyPets.Infra;
 
 import br.com.vianna.edu.EasyPets.Service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +71,12 @@ public class SecurityConfigurations {
                                 "/animal/cadastroAnimal",
                                 "/animal/listaAnimaisTarefa"
                         ).hasRole("CUIDADOR")
+
+                        .requestMatchers(
+                                "/animal/listaAnimais",
+                                "/animal/cadastroAnimal",
+                                "/animal/listaAnimaisTarefa"
+                        ).hasRole("VETERINARIO")
 
                 .anyRequest().authenticated()
         ) .formLogin(form -> form

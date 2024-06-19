@@ -51,13 +51,67 @@
         .btn-realizada:disabled {
             background-color: grey;
         }
+        .filtro-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #filtro {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #btn-filtrar {
+            padding: 8px 16px;
+            background-color: #4cae4c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #btn-filtrar:hover {
+            background-color: #45a945;
+        }
+        #btn-voltar {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        #btn-voltar:hover {
+            background-color: #0056b3;
+        }
+        #btn-filtrar{
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        #btn-filtrar:hover {
+            background-color: #0056b3;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
 <div class="container">
-    <h1>Tarefas de Cuidados</h1>
-    <table>
+    <h1>Tarefas</h1>
+    <div>
+        <label for="filtro">Filtrar por:</label>
+        <select id="filtro">
+            <option value="">Todos</option>
+            <option value="true">Atendidas</option>
+            <option value="false">Pendentes</option>
+        </select>
+        <button id="btn-filtrar" onclick="filtrarTarefas()">Filtrar</button>
+    </div>
+    <table id="tabela-tarefas">
         <thead>
         <tr>
             <th>ID</th>
@@ -86,6 +140,7 @@
         </tr>
         </tbody>
     </table>
+    <button id="btn-voltar" onclick="goBack()">Voltar</button>
 </div>
 
 <script>
@@ -103,6 +158,29 @@
                 alert('Erro ao marcar a tarefa como realizada');
             }
         });
+    }
+
+    function filtrarTarefas() {
+        var filtro = document.getElementById("filtro").value;
+
+        if (filtro == "") {
+            location.reload();
+        }
+
+        $.ajax({
+            url: `/tarefa/listaTarefasRealizada/${filtro}`,
+            type: 'GET',
+            success: function(data) {
+                $('body').html(data);
+            },
+            error: function() {
+                alert('Erro ao buscar tarefas');
+            }
+        });
+    }
+
+    function goBack() {
+        window.history.back();
     }
 </script>
 </body>

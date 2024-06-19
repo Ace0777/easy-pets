@@ -59,6 +59,20 @@
             max-width: 500px;
             width: 100%;
         }
+
+        #btn-voltar {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        #btn-voltar:hover {
+            background-color: #0056b3;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
@@ -87,6 +101,9 @@
         </tr>
         </tbody>
     </table>
+
+    <button id="btn-voltar" onclick="goBack()">Voltar</button>
+
 </div>
 
 <div id="modalOverlay" class="modal-overlay">
@@ -153,6 +170,10 @@
         }).fail(function () {
             alert("Erro ao salvar a tarefa.");
         });
+    }
+
+    function goBack() {
+        window.history.back();
     }
 </script>
 </body>

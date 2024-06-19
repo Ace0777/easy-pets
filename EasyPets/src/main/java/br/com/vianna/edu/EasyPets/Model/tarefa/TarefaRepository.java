@@ -11,4 +11,6 @@ public interface TarefaRepository extends JpaRepository<Tarefa, Long> {
     @Query("SELECT t FROM Tarefa t WHERE t.cuidador.id = :userId")
     List<Tarefa> findByCuidadorId(Long userId);
 
+    @Query("SELECT t FROM Tarefa t WHERE t.realizada = :realizada AND t.cuidador.id = :userId")
+    List<Tarefa> findByRealizada(boolean realizada, Long userId);
 }

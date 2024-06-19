@@ -1,6 +1,6 @@
 package br.com.vianna.edu.EasyPets.Controller;
 
-import br.com.vianna.edu.EasyPets.Dtos.UserUpdateDto;
+import br.com.vianna.edu.EasyPets.Model.Dtos.UserUpdateDto;
 import br.com.vianna.edu.EasyPets.Model.user.User;
 import br.com.vianna.edu.EasyPets.Model.user.UserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -8,14 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
 
@@ -75,7 +70,9 @@ public class UsuarioController {
 
     @PutMapping("/atualizar/{id}")
     @ResponseBody
-    public User atualizarUsuario(@PathVariable final Long id, @RequestBody UserUpdateDto usuario) {
+    public User atualizarUsuario(@PathVariable final Long id, @RequestBody UserUpdateDto usuario, HttpSession session) {
+        User uSessao = (User) session.getAttribute("usuarioLogado");
+
         User usuarioExistente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
         usuarioExistente.setNome(usuario.getNome());
@@ -83,6 +80,13 @@ public class UsuarioController {
         usuarioExistente.setCpf(usuario.getCpf());
         usuarioExistente.setLogin(usuario.getLogin());
         usuarioExistente.setSenha(usuario.getSenha());
+
+
+        if (usuario.getTipoUser() == null) {
+            usuarioExistente.setTipoUser(uSessao.getTipoUser());
+        } else {
+            usuarioExistente.setTipoUser(usuario.getTipoUser());
+        }
 
         return repository.save(usuarioExistente);
     }

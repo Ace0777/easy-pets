@@ -73,6 +73,19 @@ public class TarefaController {
         return "listaTarefas";
     }
 
+    @GetMapping("/listaTarefasRealizada/{realizada}")
+    public String mostrarTarefas(Model model, HttpSession session, @PathVariable boolean realizada) {
+        User usuarioLogado = (User) session.getAttribute("usuarioLogado");
+
+        Long userId = usuarioLogado.getId();
+
+        List<Tarefa> tarefas = tarefaRepository.findByRealizada(realizada, userId);
+
+        model.addAttribute("tarefas", tarefas);
+
+        return "listaTarefas";
+    }
+
     @PutMapping("/realizar/{id}")
     public ResponseEntity<Void> realizarTarefa(@PathVariable Long id) {
         Optional<Tarefa> tarefaOpt = tarefaRepository.findById(id);
