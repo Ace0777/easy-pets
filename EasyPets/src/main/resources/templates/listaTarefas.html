@@ -40,23 +40,16 @@
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
+        .btn-realizada {
+            padding: 6px 12px;
+            color: white;
+            background-color: #4cae4c;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 100%;
+        .btn-realizada:disabled {
+            background-color: grey;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -84,98 +77,30 @@
             <td th:text="${tarefa.cuidador.nome}"></td>
             <td th:text="${tarefa.dataRealizacaoTarefa}"></td>
             <td th:text="${tarefa.dataLimiteTarefa}"></td>
-            <td th:text="${tarefa.realizada} ? 'Sim' : 'Não'"></td>
+            <td>
+                <button th:attr="data-id=${tarefa.id}" th:disabled="${tarefa.realizada}"
+                        class="btn-realizada" onclick="marcarComoRealizada(this)">
+                    <span th:text="${tarefa.realizada} ? 'Realizada' : 'Marcar como Realizada'"></span>
+                </button>
+            </td>
         </tr>
         </tbody>
     </table>
 </div>
 
-<div id="modalOverlay" class="modal-overlay">
-    <div class="modal-content">
-        <div class="ant-modal-header">
-            <div class="ant-modal-title">Editar Tarefa</div>
-        </div>
-        <div class="ant-modal-body">
-            <form id="editForm">
-                <input type="hidden" id="editId" />
-                <div class="ant-form-item">
-                    <label>Descrição</label>
-                    <input type="text" id="editDescricao" class="ant-input" />
-                </div>
-                <div class="ant-form-item">
-                    <label>Animal</label>
-                    <input type="text" id="editAnimal" class="ant-input" />
-                </div>
-                <div class="ant-form-item">
-                    <label>Cuidador</label>
-                    <input type="text" id="editCuidador" class="ant-input" />
-                </div>
-                <div class="ant-form-item">
-                    <label>Data Realização</label>
-                    <input type="date" id="editDataRealizacao" class="ant-input" />
-                </div>
-                <div class="ant-form-item">
-                    <label>Data Limite</label>
-                    <input type="date" id="editDataLimite" class="ant-input" />
-                </div>
-                <div class="ant-form-item">
-                    <label>Realizada</label>
-                    <select id="editRealizada" class="ant-select">
-                        <option value="true">Sim</option>
-                        <option value="false">Não</option>
-                    </select>
-                </div>
-            </form>
-        </div>
-        <div class="ant-modal-footer">
-            <button type="button" class="ant-btn" onclick="closeModal()">Cancelar</button>
-            <button type="button" class="ant-btn ant-btn-primary" onclick="saveChanges()">Salvar</button>
-        </div>
-    </div>
-</div>
-
 <script>
-    function openModal(id) {
-        $.ajax({
-            url: `/tarefa/${id}`,
-            type: 'GET',
-            success: function(tarefa) {
-                $('#editId').val(tarefa.id);
-                $('#editDescricao').val(tarefa.descricao);
-                $('#editAnimal').val(tarefa.animal.nome);
-                $('#editCuidador').val(tarefa.cuidador.nome);
-                $('#editDataRealizacao').val(tarefa.dataRealizacaoTarefa);
-                $('#editDataLimite').val(tarefa.dataLimiteTarefa);
-                $('#editRealizada').val(tarefa.realizada);
-                $('#modalOverlay').css('display', 'flex');
-            }
-        });
-    }
-
-    function closeModal() {
-        $('#modalOverlay').css('display', 'none');
-    }
-
-    function saveChanges() {
-        const tarefaAtualizada = {
-            descricao: $('#editDescricao').val(),
-            animal: $('#editAnimal').val(),
-            cuidador: $('#editCuidador').val(),
-            dataRealizacaoTarefa: $('#editDataRealizacao').val(),
-            dataLimiteTarefa: $('#editDataLimite').val(),
-            realizada: $('#editRealizada').val() === 'true'
-        };
-
-        const id = $('#editId').val();
+    function marcarComoRealizada(button) {
+        const id = $(button).data('id');
 
         $.ajax({
-            url: `/tarefa/atualizar/${id}`,
+            url: `/tarefa/realizar/${id}`,
             type: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify(tarefaAtualizada),
             success: function() {
-                closeModal();
-                window.location.reload();
+                $(button).text('Realizada');
+                $(button).attr('disabled', 'disabled');
+            },
+            error: function() {
+                alert('Erro ao marcar a tarefa como realizada');
             }
         });
     }

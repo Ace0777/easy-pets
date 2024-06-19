@@ -8,12 +8,14 @@ import br.com.vianna.edu.EasyPets.Model.user.User;
 import br.com.vianna.edu.EasyPets.Model.user.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/tarefa")
@@ -69,6 +71,18 @@ public class TarefaController {
         model.addAttribute("tarefas", tarefas);
 
         return "listaTarefas";
+    }
+
+    @PutMapping("/realizar/{id}")
+    public ResponseEntity<Void> realizarTarefa(@PathVariable Long id) {
+        Optional<Tarefa> tarefaOpt = tarefaRepository.findById(id);
+        if (tarefaOpt.isPresent()) {
+            Tarefa tarefa = tarefaOpt.get();
+            tarefa.setRealizada(true);
+            tarefaRepository.save(tarefa);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
 
